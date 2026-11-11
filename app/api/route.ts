@@ -1,3 +1,4 @@
+import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(){
@@ -9,13 +10,17 @@ export async function GET(){
 export async function POST(req : NextRequest){
     const body = await req.json()
 
-    console.log(body);
-
-    const message = "My Name Is "+body.name+" and "+body.age+" Years Old "+" My Favorite Subject is "+body.subject+"."+" My Favorite Color is "+body.color;
-
-    console.log(message);
-
-    return NextResponse.json(
-        {message: "POST request received in to API"}
+    await prisma.student.create(
+        {
+            data: {
+                name : body.name,
+                age: Number(body.age), // Convert age to number 
+                city : body.city
+            }
+        }
     )
+
+
+    return NextResponse.json({message: "Student created successfully"})
 }
+
