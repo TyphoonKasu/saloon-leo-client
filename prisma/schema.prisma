@@ -12,16 +12,39 @@ datasource db {
   provider = "postgresql"
 }
 
-model Student {
-  id        Int      @id @default(autoincrement())
-  name      String
-  age       Int
-  city      String
+enum Role {
+  ADMIN
+  STAFF
+  CUSTOMER
 }
 
-model Teacher {
-  id        Int      @id @default(autoincrement())
-  name      String
-  age       Int
-  city      String
+enum Permission {
+  CREATE_STAFF
+  READ_STAFF
+  UPDATE_STAFF
+  DELETE_STAFF
+  CREATE_CUSTOMER
+  READ_CUSTOMER
+  UPDATE_CUSTOMER
+  DELETE_CUSTOMER
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE // considered as deleted
+  SUSPENDED // considered as banned can be activated again by admin
+}
+
+model User {
+  id String @id @default(uuid())
+  email String @unique
+  firstName String
+  lastName String
+  password String
+  role Role @default(CUSTOMER)
+  image String @default("/images/default-user.png")
+  permissions Permission[] @default([])
+  status Status @default(ACTIVE)
+  createdAt DateTime @default(now())
+  lastLogin DateTime?
 }
